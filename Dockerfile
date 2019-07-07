@@ -7,12 +7,10 @@ ENV CGO_ENABLED 0
 
 WORKDIR /go/src/github.com/minio/
 
-RUN  \
-     apt update -y && apt install -y git && \
-     go get -v -d github.com/minio/minio && \
-     cd /go/src/github.com/minio/minio && \
-     go install -v -ldflags "$(go run buildscripts/gen-ldflags.go)" && \
-     go build -ldflags "-s -w" -o /usr/bin/healthcheck dockerscripts/healthcheck.go 
+RUN apt update -y && apt install -y git
+RUN go get -v -d github.com/minio/minio
+RUN cd /go/src/github.com/minio/minio && go install -v -ldflags "$(go run buildscripts/gen-ldflags.go)"
+RUN cd /go/src/github.com/minio/minio && go build -ldflags "-s -w" -o /usr/bin/healthcheck dockerscripts/healthcheck.go 
 
 FROM alpine:3.7
 
@@ -27,7 +25,7 @@ COPY --from=0 /usr/bin/healthcheck /usr/bin/healthcheck
 COPY dockerscripts/docker-entrypoint.sh /usr/bin/
 
 RUN  \
-     apk add --no-cache ca-certificates 'curl>7.61.0' && \
+     apt install -y ca-certificates curl && \
      echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf
 
 ENTRYPOINT ["/usr/bin/docker-entrypoint.sh"]

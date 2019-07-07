@@ -25,7 +25,7 @@ COPY --from=0 /usr/bin/healthcheck /usr/bin/healthcheck
 COPY dockerscripts/docker-entrypoint.sh /usr/bin/
 
 RUN  \
-     apt install -y ca-certificates curl && \
+     apk add --no-cache ca-certificates 'curl>7.61.0' && \
      echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf
 
 ENTRYPOINT ["/usr/bin/docker-entrypoint.sh"]

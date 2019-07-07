@@ -8,7 +8,7 @@ ENV CGO_ENABLED 0
 WORKDIR /go/src/github.com/minio/
 
 RUN  \
-     apk add --no-cache git && \
+     apt update -y && apt install -y git && \
      go get -v -d github.com/minio/minio && \
      cd /go/src/github.com/minio/minio && \
      go install -v -ldflags "$(go run buildscripts/gen-ldflags.go)" && \

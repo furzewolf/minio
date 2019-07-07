@@ -9,8 +9,8 @@ WORKDIR /go/src/github.com/minio/
 
 RUN apt update -y && apt install -y git
 RUN go get -v -d github.com/minio/minio
-RUN cd /go/src/github.com/minio/minio && go install -v -ldflags "$(go run buildscripts/gen-ldflags.go)"
-RUN cd /go/src/github.com/minio/minio && go build -ldflags "-s -w" -o /usr/bin/healthcheck dockerscripts/healthcheck.go 
+RUN cd /go/src/github.com/minio/minio && GO111MODULE=on go install -v -ldflags "$(go run buildscripts/gen-ldflags.go)"
+RUN cd /go/src/github.com/minio/minio && GO111MODULE=on go build -ldflags "-s -w" -o /usr/bin/healthcheck dockerscripts/healthcheck.go 
 
 FROM alpine:3.7
 
